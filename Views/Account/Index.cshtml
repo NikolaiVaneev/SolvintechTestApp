@@ -1,0 +1,15 @@
+﻿@model SolvintechTestApp.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="form-group">
+    <label>Your API-token</label>
+    <input id="tokenInput" form="regform" readonly class="form-control" asp-for="Token" type="text" />
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end py-2">
+        <a asp-controller="Account" asp-action="Logout"  class="btn btn-warning">Log Out</a>
+
+    </div>
+</div>
+

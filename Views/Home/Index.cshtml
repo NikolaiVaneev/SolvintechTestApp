@@ -1,0 +1,97 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model SolvintechTestApp.Models.HomeViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h2>API token</h2>
+            <div class="form-group">
+                <label asp-for="Token"></label>
+                <input id="tokenInput" form="regform" readonly class="form-control" asp-for="Token" type="text" />
+            </div>
+            <a id="tokenBtn" asp-action="Index" class="btn btn-light d-inline-block">Generate</a>
+        </div>
+        <div class="col-sm">
+            <h2>Register</h2>
+            <form id="regform" method="post" asp-controller="Account" asp-action="Register" >
+                <div class="form-group">
+                    <label asp-for="RegistrationEmail"></label>
+                    <input class="form-control" type="email" asp-for="RegistrationEmail" />
+                    <span class="text-danger" asp-validation-for="RegistrationEmail"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RegistrationPassword"></label>
+                    <input class="form-control" type="password" asp-for="RegistrationPassword" />
+                    <span class="text-danger" asp-validation-for="RegistrationPassword"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PasswordConfirm"></label>
+                    <input class="form-control" asp-for="PasswordConfirm" />
+                    <span class="text-danger" asp-validation-for="PasswordConfirm"></span>
+                </div>
+                
+                <button class="btn btn-light">Register</button>
+            </form>
+        </div>
+        <div class="col-sm">
+            <h2>Log In</h2>
+            <form method="post" asp-controller="Account" asp-action="Login">
+                <div class="form-group">
+                    <label asp-for="LoginEmail"></label>
+                    <input class="form-control" autocomplete="username" type="email" asp-for="LoginEmail" />
+                    <span class="text-danger" asp-validation-for="LoginEmail"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LoginPassword"></label>
+                    <input class="form-control" type="password" asp-for="LoginPassword" />
+                    <span class="text-danger" asp-validation-for="LoginPassword"></span>
+                </div>
+                <button class="btn btn-light">Log In</button>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Account" asp-action="Logout" class="btn btn-light" >Log Out</a>
+                }
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+
+    @{
+        <partial name = "_ValidationScriptsPartial"/>
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+
+                const btnTG = document.querySelector("#tokenBtn");
+                const inputTG = document.querySelector("#tokenInput");
+              
+
+                function GenerateToken() {
+                    $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("TokenGenerate", "Account")',
+                        success: function (msg) {
+                            inputTG.value = msg;
+                        }
+                    });
+                };
+
+                GenerateToken();
+
+                btnTG.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    GenerateToken();
+                });
+            });
+
+        </script>
+    }
+
+}
